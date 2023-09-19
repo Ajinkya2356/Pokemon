@@ -8,6 +8,9 @@ export class Pokemon extends Component {
       pokemonData: [],
       count: 0,
       page: 1,
+      searchQuery: "",
+      filterPokemon: [],
+      searching: false,
     };
   }
   async componentDidMount() {
@@ -36,6 +39,7 @@ export class Pokemon extends Component {
     this.setState({
       pokemonData: pokemonData,
       count: passData.count,
+      searching: false,
     });
   }
   handlePrevious = async () => {
@@ -70,6 +74,7 @@ export class Pokemon extends Component {
         pokemonData: pokemonData,
         page: previousPage,
         count: passData.count,
+        searching: false,
       });
     }
   };
@@ -106,46 +111,68 @@ export class Pokemon extends Component {
         pokemonData: pokemonData,
         page: this.state.page + 1,
         count: passData.count,
+        searching: false,
       });
     }
   };
 
-  
+  handleChange = (event) => {
+    this.setState({ searchQuery: event.target.value }, () => {
+      const filtered = this.state.pokemonData.filter((pokemon) =>
+        pokemon.name
+          .toLowerCase()
+          .includes(this.state.searchQuery.toLowerCase())
+      );
+      this.setState({ filterPokemon: filtered, searching: true });
+    });
+  };
   render() {
     return (
       <div className="container py-5">
-        <h1
-          style={{
-            color: "#2E3156",
-            fontFamily: "Roboto",
-            fontSize: "30px",
-            fontStyle: "normal",
-            fontWeight: "700",
-            lineHeight: "normal",
-            letterSpacing: "1.8px",
-          }}
-        >
-          Pokedex |
-          <small
-            style={{
-              color: "#5D5F7E",
-              fontFamily: "Roboto",
-              fontSize: "20px",
-              fontStyle: "normal",
-              fontWeight: "500",
-              lineHeight: "normal",
-            }}
-            className="mx-2"
-          >
-            search for any pokemon that exists on planet
-          </small>
-        </h1>
+        <div className="row">
+          <div className="col-12 col-lg-2">
+            <h1
+              className="display-5 fw-bold"
+              style={{
+                color: "#2E3156",
+                fontFamily: "Roboto",
+                fontSize: "30px",
+                fontStyle: "normal",
+                fontWeight: "700",
+                lineHeight: "normal",
+                letterSpacing: "1.8px",
+              }}
+            >
+              Pokedex
+            </h1>
+            <hr
+              className="d-lg-block position-absolute top-50 translate-middle-y"
+              style={{ color: "red", left: "50%", height: "50px" }}
+            />
+            <hr className="d-lg-none" />
+          </div>
+          <div className="col-12 col-lg-10">
+            <small
+              className=" fs-6 fw-normal"
+              style={{
+                color: "#5D5F7E",
+                fontFamily: "Roboto",
+                fontSize: "20px",
+                fontStyle: "normal",
+                fontWeight: "500",
+                lineHeight: "normal",
+              }}
+            >
+              search for any pokemon that exists on planet
+            </small>
+          </div>
+        </div>
 
         <div
-          className="container my-4 d-flex"
+          className="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center"
           style={{ background: "#DEEDED", color: "#5D5F7E" }}
         >
-          <div className="mb-3" style={{ marginLeft: "-10px" }}>
+          <div className="mb-3">
             <label htmlFor="search" className="form-label">
               Search by
             </label>
@@ -155,11 +182,13 @@ export class Pokemon extends Component {
               className="form-control"
               id="search"
               placeholder="search by name"
+              value={this.state.searchQuery}
+              onChange={this.handleChange}
               style={{
                 borderRadius: "8px",
                 background: "#C9DDE2",
-                width: "663px",
-                height: "57px",
+                width: "100%",
+                maxWidth: "663px",
               }}
             />
           </div>
@@ -270,7 +299,7 @@ export class Pokemon extends Component {
               </ul>
             </div>
           </div>
-          <div className="mb-3 mx-2">
+          <div className="mb-3 mx-3">
             <label htmlFor="stats" className="form-label">
               Stats
             </label>
@@ -446,19 +475,39 @@ export class Pokemon extends Component {
             </div>
           </div>
         </div>
-        <div className="row">
-          {this.state.pokemonData.map((element) => {
-            return (
-              <div className="col-md-2" key={element.url}>
-                <Poke
-                  name={element.name ? element.name : ""}
-                  imgURL={element.imgURL}
-                  pid={element.pid}
-                  type={element.type}
-                />
-              </div>
-            );
-          })}
+        
+        <div className="row d-flex">
+          {this.state.searching
+            ? this.state.filterPokemon.map((element) => {
+                return (
+                  <div
+                    className="col-lg-2 col-md-3 col-sm-5 mb-4"
+                    key={element.url}
+                  >
+                    <Poke
+                      name={element.name ? element.name : ""}
+                      imgURL={element.imgURL}
+                      pid={element.pid}
+                      type={element.type}
+                    />
+                  </div>
+                );
+              })
+            : this.state.pokemonData.map((element) => {
+                return (
+                  <div
+                    className="col-lg-2 col-md-3 col-sm-5 mb-4"
+                    key={element.url}
+                  >
+                    <Poke
+                      name={element.name ? element.name : ""}
+                      imgURL={element.imgURL}
+                      pid={element.pid}
+                      type={element.type}
+                    />
+                  </div>
+                );
+              })}
         </div>
         <div className="container d-flex justify-content-between">
           <button

@@ -4,7 +4,7 @@ import Pokemon from './components/Pokemon';
 
 function App() {
   return (
-    <div style={{ background: "#DEEDED", width: " 1580px", height: "1162px" }}>
+    <div style={{ background: "#DEEDED" }}>
       <Pokemon/>
     </div>
   );

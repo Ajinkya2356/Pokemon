@@ -6,7 +6,7 @@ export class Poke extends Component {
   render() {
     let {name,imgURL,pid,type} = this.props;
     return (
-      <div className="my-3 d-flex justify-content-md-between">
+    //   <div className="my-3 d-flex justify-content-between "style={{border:'1px solid black'}}>
         <div
           className="card"
           style={{
@@ -15,7 +15,7 @@ export class Poke extends Component {
             borderRadius: "8px",
             border: "1px dashed #2E3156",
             background: `linear-gradient(180deg, #C0D4C8 0%, ${typeColor[type]} 100%)`,
-            flexShrink: "0",
+            
           }}
         >
           <img src={imgURL} className="card-img-top" alt="..." />
@@ -51,7 +51,7 @@ export class Poke extends Component {
             </p>
           </div>
         </div>
-      </div>
+    //   </div>
     );
   }
 }
